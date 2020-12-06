@@ -23,6 +23,51 @@ public class Main {
         System.exit(0);
     }
 
+    private static User extractUserFromResultSet(ResultSet rs) throws SQLException {
+        User user = new User();
+        try {
+            user.setId(rs.getInt("userID"));
+            user.setName(rs.getString("Username"));
+            user.setPass(rs.getString("Password"));
+        }catch (SQLException ex){
+            System.out.println("User or pass incorrect");
+            ex.printStackTrace();
+            return null;
+        }
+        return user;
+
+    }
+
+    private static User getUserPass() throws IOException {
+        User user = new User();
+        BufferedReader reader =
+                new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Username: \n");
+        user.setName( reader.readLine());
+        System.out.println("Password: \n");
+        user.setPass(reader.readLine());
+
+        return user;
+    }
+
+    public static User getUserByUserNameAndPassword(String user, String pass) throws SQLException {
+        ConnectionManager connector = new ConnectionManager();
+        Connection connection = connector.createConnection();
+        try{
+            PreparedStatement ps = connection.prepareStatement(Queries.USER_PASS.getString());
+            ps.setString(1, user);
+            ps.setString(2, pass);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+            {
+                return extractUserFromResultSet(rs);
+            }
+        } catch (SQLException ex) {
+
+            ex.printStackTrace();
+        }
+        return null;
+    }
     public static ResultSet queryToResultSet(Queries query) throws SQLException {
         ConnectionManager connector = new ConnectionManager();
         Connection connection = connector.createConnection();
@@ -31,6 +76,11 @@ public class Main {
         try {
             PreparedStatement ps = connection.prepareStatement(queryString);
             rset = ps.executeQuery();
+            if(rset.equals(null))
+            {
+                System.out.println("No results found...");
+            }
+
         } catch (SQLException e) {
             System.out.println("[ERROR] QUERY COULD NOT BE EXECUTED ");
             while (e != null) {
@@ -40,6 +90,8 @@ public class Main {
             connection.close();
             return null;
         }
+        connection.close();
+      
         return rset;
     }
 
@@ -74,12 +126,17 @@ public class Main {
         });
         equipAndSupplies.add(new MenuOption("3", "View Inventory") {
             @Override
+          
             public void doAction() {}
         });
         equipAndSupplies.add(new MenuOption("0", "Quit") {
             @Override
             public void doAction() {
-
+              
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
             }
         });
         custAndServices.add(new MenuOption("1", "Analyze the progress of the business") {
@@ -92,13 +149,22 @@ public class Main {
         {
             @Override
             public void doAction(){
-
+              
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,1);
             };
         });
         cust_analyze.add(new MenuOption("2", "Total number of service transactions")
         {
             @Override
             public void doAction(){
+
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_YEARLY);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,1);
 
             };
         });
@@ -108,22 +174,36 @@ public class Main {
                 cust_services.menuLoop();
             }
         });
-        cust_services.add(new MenuOption("1", "Requested Services")
+        cust_services.add(new MenuOption("1", "Most requested service")
         {
             @Override
+
             public void doAction(){
 
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_MOST_USED_SERVICE);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,1);
             };
         });
         cust_services.add(new MenuOption("2", "Service Transactions")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_SERVICE_TRANSACTION_COUNT_MONTH);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+
+            };
         });
         cust_services.add(new MenuOption("3", "Annual revenues from services")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_ANNUAL_REVENUE_SERVICE_TO_CUSTOMERS);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
         custAndServices.add(new MenuOption("3", "Customers") {
             @Override
@@ -133,12 +213,20 @@ public class Main {
         cust_cust.add(new MenuOption("1", "Customer list for a service")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
         cust_cust.add(new MenuOption("2", "Customer number")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
 
         custAndServices.add(new MenuOption("0", "Quit") {
@@ -150,7 +238,11 @@ public class Main {
         //Display Schedules calls code to display schedule based on employeeID input.
         employees.add(new MenuOption("1", "Display Schedules"){
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_EMPLOYEE_SCHEDULES);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
         //Quit employee menu.
         employees.add(new MenuOption("0", "Quit"){
@@ -261,7 +353,6 @@ public class Main {
         menu.add(new MenuOption("1","Equipment & Supplies") {
             @Override
             public void doAction() {
-                System.out.println("I'm in equipment and supplies");
                 equipAndSupplies.menuLoop();
             }
         });
@@ -269,21 +360,23 @@ public class Main {
         menu.add(new MenuOption("2","Customer & Services") {
             @Override
             public void doAction() {
-                System.out.println("Customers & Services");
                 custAndServices.menuLoop();
             }
         });
         menu.add(new MenuOption("3","Employees") {
             @Override
             public void doAction() {
-                System.out.println("Employees");
                 employees.menuLoop();
             }
         });
         menu.add(new MenuOption("4","Updates") {
             @Override
             public void doAction() {
-                System.out.println("Updates");
+
+                ConnectionManager connObj = new ConnectionManager();
+                Connection conn = connObj.createConnection();
+                Updates update = new Updates();
+                update.run(conn);
                 updates.menuLoop();
             }
         });

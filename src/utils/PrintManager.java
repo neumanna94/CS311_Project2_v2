@@ -40,16 +40,23 @@ public class PrintManager {
     public static void printTwoColumn(ResultSet rset) throws SQLException {
         ResultSet result = rset;
         while(result.next()){
-            System.out.print(rset.getString(1) + " ");
-            System.out.print(rset.getString(2));
-        }
+        while(rset.next())
+            System.out.print(rset.getString(1));
     }
 
+    public static void printNewCustomers(ResultSet rset) throws SQLException {
+        while(rset.next()){
+            System.out.println(rset.getInt(1));
+        }
+    }
     public static void printThreeColumn(ResultSet rset) throws SQLException {
         ResultSet result = rset;
         while(result.next()){
             System.out.print(rset.getInt(1) + " ");
             System.out.print(rset.getString(2) + " ");
+        while(rset.next()){
+            System.out.print(rset.getString(1) + " ");
+            System.out.print(rset.getString(2) + " " );
             System.out.print(rset.getString(3));
         }
     }

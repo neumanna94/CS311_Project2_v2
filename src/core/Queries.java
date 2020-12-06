@@ -23,7 +23,10 @@ public enum Queries {
     SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL("SELECT * FROM CleaningSupply WHERE CurrentInventory > SafetyStockLevel;"),
     SELECT_MOST_USED_CLEANING_SUPPLY("SELECT * FROM Inventory as I INNER JOIN CleaningSupply as CS ON I.InventoryID = CS.InventoryID WHERE I.InventoryID = (SELECT InventoryID FROM CustomerUseInventory as CUI GROUP BY CUI.InventoryID ORDER BY COUNT(*) DESC LIMIT 1) AND I.InventoryCategory = \'CS\';"),
     SELECT_MOST_USED_SERVICE("SELECT * FROM Service AS S WHERE S.ServiceID = (SELECT CS.ServiceID FROM CustomerTransaction as CS GROUP BY CS.ServiceID ORDER BY COUNT(*) DESC LIMIT 1);"),
-    FIND_SUPPLIER_PRODUCTS("SELECT SP.SupplierProductID, SP.Name, SP.Description, SP.Price, SP.SupplierID FROM Supplier as S INNER JOIN SupplierProduct as SP ON S.SupplierID = SP.SupplierID WHERE S.SupplierID = ?;");
+    SELECT_INVENTORY("SELECT Name, CurrentInventory, SafetyStockLevel FROM CleaningSupply;"),
+    SELECT_NEW_CUSTOMERS_YEARLY("SELECT COUNT(*) FROM Customer WHERE YEAR(CreationDate) = YEAR(CURRENT_DATE);"),
+    SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION("SELECT MONTH(CT.DATE), COUNT(*) FROM (SELECT * FROM CustomerTransaction WHERE YEAR(CustomerTransaction.Date) = YEAR(CURRENT_DATE)) AS CT GROUP BY MONTH(CT.Date);"),
+    FIND_SUPPLIER_PRODUCTS("SELECT SP.SupplierProductID, SP.Name, SP.Description, SP.Price, SP.SupplierID FROM Supplier as S INNER JOIN SupplierProduct as SP ON S.SupplierID = SP.SupplierID WHERE S.SupplierID = ?;"),;
 
 
     private final String query;
