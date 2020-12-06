@@ -20,7 +20,7 @@ public enum Queries {
     SELECT_MACHINE_SCHEDULES("SELECT E.EquipmentID, E.Description, E.PurchaseDate, E.Type, EMS.Name, EMS.NextMaintenanceDate, EMS.MaintenancePeriod, EMS.LastMaintenance, EMS.Cost FROM Equipment AS E INNER JOIN EquipmentMaintenanceSchedule AS EMS ON E.EquipmentMaintenanceScheduleID = EMS.EquipmentMaintenanceScheduleID;"),
     SELECT_MACHINE_TIME_IN_MONTHS("SELECT EquipmentID, Description, Type, HoursUsed*0.001368925 as \'Months in use\' FROM Equipment;"),
     SELECT_MACHINE_PERCENT_TIME_USED("SELECT HoursUsed/(DATEDIFF(CURRENT_DATE, PurchaseDate)*24) as 'Percentage time used' FROM Equipment;"),
-    SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL("SELECT * FROM CleaningSupply WHERE CurrentInventory < SafetyStockLevel;"),
+    SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL("SELECT * FROM CleaningSupply WHERE CurrentInventory > SafetyStockLevel;"),
     SELECT_MOST_USED_CLEANING_SUPPLY("SELECT * FROM Inventory as I INNER JOIN CleaningSupply as CS ON I.InventoryID = CS.InventoryID WHERE I.InventoryID = (SELECT InventoryID FROM CustomerUseInventory as CUI GROUP BY CUI.InventoryID ORDER BY COUNT(*) DESC LIMIT 1) AND I.InventoryCategory = \'CS\';"),
     SELECT_MOST_USED_SERVICE("SELECT * FROM Service AS S WHERE S.ServiceID = (SELECT CS.ServiceID FROM CustomerTransaction as CS GROUP BY CS.ServiceID ORDER BY COUNT(*) DESC LIMIT 1);"),
     SELECT_INVENTORY("SELECT Name, CurrentInventory, SafetyStockLevel FROM CleaningSupply;"),

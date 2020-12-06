@@ -68,7 +68,6 @@ public class Main {
         }
         return null;
     }
-
     public static ResultSet queryToResultSet(Queries query) throws SQLException {
         ConnectionManager connector = new ConnectionManager();
         Connection connection = connector.createConnection();
@@ -92,7 +91,7 @@ public class Main {
             return null;
         }
         connection.close();
-
+      
         return rset;
     }
 
@@ -111,9 +110,13 @@ public class Main {
         Menu updates_insert = new Menu(2);
         Menu updates_delete = new Menu(2);
         Menu updates_update = new Menu(2);
+
+
         equipAndSupplies.add(new MenuOption("1", "Add new equipment") {
             @Override
-            public void doAction() {}
+            public void doAction() throws SQLException {
+
+            }
         });
         equipAndSupplies.add(new MenuOption("2", "Add new supply") {
             @Override
@@ -123,6 +126,13 @@ public class Main {
         });
         equipAndSupplies.add(new MenuOption("3", "View Inventory") {
             @Override
+          
+            public void doAction() {}
+        });
+        equipAndSupplies.add(new MenuOption("0", "Quit") {
+            @Override
+            public void doAction() {
+              
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
                 PrintManager printManager = new PrintManager();
@@ -131,11 +141,15 @@ public class Main {
         });
         custAndServices.add(new MenuOption("1", "Analyze the progress of the business") {
             @Override
-            public void doAction() {cust_analyze.menuLoop();}
+            public void doAction() {
+                cust_analyze.menuLoop();
+            }
         });
         cust_analyze.add(new MenuOption("1", "Total number of new customers")
         {
             @Override
+            public void doAction(){
+              
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
                 PrintManager printManager = new PrintManager();
@@ -145,19 +159,27 @@ public class Main {
         cust_analyze.add(new MenuOption("2", "Total number of service transactions")
         {
             @Override
+            public void doAction(){
+
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_YEARLY);
                 PrintManager printManager = new PrintManager();
                 printManager.printResultSet(resultSet,1);
+
             };
         });
         custAndServices.add(new MenuOption("2", "Services") {
             @Override
-            public void doAction() {cust_services.menuLoop();}
+            public void doAction() {
+                cust_services.menuLoop();
+            }
         });
         cust_services.add(new MenuOption("1", "Most requested service")
         {
             @Override
+
+            public void doAction(){
+
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_MOST_USED_SERVICE);
                 PrintManager printManager = new PrintManager();
@@ -316,8 +338,10 @@ public class Main {
         debug.add(new MenuOption("2", "Test login") {
             @Override
             public void doAction() throws SQLException, IOException {
-                User x = getUserPass();
-                User user = getUserByUserNameAndPassword(x.getName(), x.getPass());
+                LoginManager loginManager = new LoginManager();
+
+                User x = loginManager.getUserPass();
+                User user = loginManager.getUserByUserNameAndPassword(x.getName(), x.getPass());
                 if(user == null)
                     System.out.println("user pass incorrect try again");
                 else
