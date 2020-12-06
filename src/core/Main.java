@@ -38,36 +38,6 @@ public class Main {
 
     }
 
-    private static User getUserPass() throws IOException {
-        User user = new User();
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Username: \n");
-        user.setName( reader.readLine());
-        System.out.println("Password: \n");
-        user.setPass(reader.readLine());
-
-        return user;
-    }
-
-    public static User getUserByUserNameAndPassword(String user, String pass) throws SQLException {
-        ConnectionManager connector = new ConnectionManager();
-        Connection connection = connector.createConnection();
-        try{
-            PreparedStatement ps = connection.prepareStatement(Queries.USER_PASS.getString());
-            ps.setString(1, user);
-            ps.setString(2, pass);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next())
-            {
-                return extractUserFromResultSet(rs);
-            }
-        } catch (SQLException ex) {
-
-            ex.printStackTrace();
-        }
-        return null;
-    }
     public static ResultSet queryToResultSet(Queries query) throws SQLException {
         ConnectionManager connector = new ConnectionManager();
         Connection connection = connector.createConnection();
@@ -90,7 +60,6 @@ public class Main {
             connection.close();
             return null;
         }
-        connection.close();
       
         return rset;
     }
@@ -126,18 +95,13 @@ public class Main {
         });
         equipAndSupplies.add(new MenuOption("3", "View Inventory") {
             @Override
-          
+
             public void doAction() {}
         });
         equipAndSupplies.add(new MenuOption("0", "Quit") {
             @Override
-            public void doAction() {
-              
-            public void doAction() throws SQLException {
-                ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
-                PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,3);
-            }
+
+            public void doAction() {}
         });
         custAndServices.add(new MenuOption("1", "Analyze the progress of the business") {
             @Override
@@ -147,24 +111,18 @@ public class Main {
         });
         cust_analyze.add(new MenuOption("1", "Total number of new customers")
         {
-            @Override
-            public void doAction(){
-              
-            public void doAction() throws SQLException {
-                ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
-                PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,1);
-            };
-        });
-        cust_analyze.add(new MenuOption("2", "Total number of service transactions")
-        {
-            @Override
-            public void doAction(){
-
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_YEARLY);
                 PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,1);
+                printManager.printColumns(resultSet);
+            }
+        });
+        cust_analyze.add(new MenuOption("2", "Total number of service transactions")
+        {
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_SERVICE_TRANSACTION_COUNT_MONTH);
+                PrintManager printManager = new PrintManager();
+                printManager.printNColumns(resultSet);
 
             };
         });
@@ -176,15 +134,11 @@ public class Main {
         });
         cust_services.add(new MenuOption("1", "Most requested service")
         {
-            @Override
-
-            public void doAction(){
-
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_MOST_USED_SERVICE);
                 PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,1);
-            };
+                printManager.printNColumns(resultSet);
+            }
         });
         cust_services.add(new MenuOption("2", "Service Transactions")
         {
@@ -192,7 +146,7 @@ public class Main {
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_SERVICE_TRANSACTION_COUNT_MONTH);
                 PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,3);
+                printManager.printNColumns(resultSet);
 
             };
         });
@@ -202,7 +156,7 @@ public class Main {
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_ANNUAL_REVENUE_SERVICE_TO_CUSTOMERS);
                 PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,3);
+                printManager.printNColumns(resultSet);
             };
         });
         custAndServices.add(new MenuOption("3", "Customers") {
@@ -216,7 +170,7 @@ public class Main {
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
                 PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,3);
+                printManager.printNColumns(resultSet);
             };
         });
         cust_cust.add(new MenuOption("2", "Customer number")
@@ -225,7 +179,7 @@ public class Main {
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
                 PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,3);
+                printManager.printNColumns(resultSet);
             };
         });
 
@@ -241,7 +195,7 @@ public class Main {
             public void doAction() throws SQLException {
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_EMPLOYEE_SCHEDULES);
                 PrintManager printManager = new PrintManager();
-                printManager.printResultSet(resultSet,3);
+                printManager.printNColumns(resultSet);
             };
         });
         //Quit employee menu.
