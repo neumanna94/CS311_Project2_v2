@@ -18,19 +18,23 @@ public class PrintManager {
     }
 
     public static void printOneColumn(ResultSet rset) throws SQLException {
-        for (int i = 0; i < 5 && rset.next(); i++)
+        while(rset.next())
             System.out.print(rset.getString(1));
     }
 
     public static void printTwoColumn(ResultSet rset) throws SQLException {
-        for (int i = 0; i < 5 && rset.next(); i++) {
+        while(rset.next()){
             System.out.print(rset.getString(1) + " ");
             System.out.print(rset.getString(2));
         }
     }
-
+    public static void printNewCustomers(ResultSet rset) throws SQLException {
+        while(rset.next()){
+            System.out.println(rset.getInt(1));
+        }
+    }
     public static void printThreeColumn(ResultSet rset) throws SQLException {
-        for (int i = 0; rset.next(); i++) {
+        while(rset.next()){
             System.out.print(rset.getString(1) + " ");
             System.out.print(rset.getString(2) + " " );
             System.out.print(rset.getString(3));
