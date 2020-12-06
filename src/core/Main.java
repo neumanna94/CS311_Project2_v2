@@ -69,7 +69,7 @@ public class Main {
         return null;
     }
 
-    public ResultSet queryToResultSet(Queries query) throws SQLException {
+    public static ResultSet queryToResultSet(Queries query) throws SQLException {
         ConnectionManager connector = new ConnectionManager();
         Connection connection = connector.createConnection();
         String queryString = query.getString();
@@ -77,6 +77,11 @@ public class Main {
         try {
             PreparedStatement ps = connection.prepareStatement(queryString);
             rset = ps.executeQuery();
+            if(rset.equals(null))
+            {
+                System.out.println("No results found...");
+            }
+
         } catch (SQLException e) {
             System.out.println("[ERROR] QUERY COULD NOT BE EXECUTED ");
             while (e != null) {
@@ -87,6 +92,7 @@ public class Main {
             return null;
         }
         connection.close();
+
         return rset;
     }
 
@@ -111,15 +117,17 @@ public class Main {
         });
         equipAndSupplies.add(new MenuOption("2", "Add new supply") {
             @Override
-            public void doAction() {}
+            public void doAction() {
+
+            }
         });
         equipAndSupplies.add(new MenuOption("3", "View Inventory") {
             @Override
-            public void doAction() {}
-        });
-        equipAndSupplies.add(new MenuOption("0", "Quit") {
-            @Override
-            public void doAction() { }
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            }
         });
         custAndServices.add(new MenuOption("1", "Analyze the progress of the business") {
             @Override
@@ -128,31 +136,52 @@ public class Main {
         cust_analyze.add(new MenuOption("1", "Total number of new customers")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_INVENTORY_BELOW_SAFETY_STOCK_LEVEL);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,1);
+            };
         });
         cust_analyze.add(new MenuOption("2", "Total number of service transactions")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_YEARLY);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,1);
+            };
         });
         custAndServices.add(new MenuOption("2", "Services") {
             @Override
             public void doAction() {cust_services.menuLoop();}
         });
-        cust_services.add(new MenuOption("1", "Requested Services")
+        cust_services.add(new MenuOption("1", "Most requested service")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_MOST_USED_SERVICE);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,1);
+            };
         });
         cust_services.add(new MenuOption("2", "Service Transactions")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_SERVICE_TRANSACTION_COUNT_MONTH);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+
+            };
         });
         cust_services.add(new MenuOption("3", "Annual revenues from services")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_ANNUAL_REVENUE_SERVICE_TO_CUSTOMERS);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
         custAndServices.add(new MenuOption("3", "Customers") {
             @Override
@@ -162,12 +191,20 @@ public class Main {
         cust_cust.add(new MenuOption("1", "Customer list for a service")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
         cust_cust.add(new MenuOption("2", "Customer number")
         {
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
 
         custAndServices.add(new MenuOption("0", "Quit") {
@@ -179,7 +216,11 @@ public class Main {
         //Display Schedules calls code to display schedule based on employeeID input.
         employees.add(new MenuOption("1", "Display Schedules"){
             @Override
-            public void doAction(){};
+            public void doAction() throws SQLException {
+                ResultSet resultSet = queryToResultSet(Queries.SELECT_EMPLOYEE_SCHEDULES);
+                PrintManager printManager = new PrintManager();
+                printManager.printResultSet(resultSet,3);
+            };
         });
         //Quit employee menu.
         employees.add(new MenuOption("0", "Quit"){
@@ -288,7 +329,6 @@ public class Main {
         menu.add(new MenuOption("1","Equipment & Supplies") {
             @Override
             public void doAction() {
-                System.out.println("I'm in equipment and supplies");
                 equipAndSupplies.menuLoop();
             }
         });
@@ -296,21 +336,18 @@ public class Main {
         menu.add(new MenuOption("2","Customer & Services") {
             @Override
             public void doAction() {
-                System.out.println("Customers & Services");
                 custAndServices.menuLoop();
             }
         });
         menu.add(new MenuOption("3","Employees") {
             @Override
             public void doAction() {
-                System.out.println("Employees");
                 employees.menuLoop();
             }
         });
         menu.add(new MenuOption("4","Updates") {
             @Override
             public void doAction() {
-                System.out.println("Updates");
                 updates.menuLoop();
             }
         });
