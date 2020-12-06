@@ -310,8 +310,12 @@ public class Main {
         menu.add(new MenuOption("4","Updates") {
             @Override
             public void doAction() {
-                System.out.println("Updates");
-                updates.menuLoop();
+                ConnectionManager connObj = new ConnectionManager();
+                Connection conn = connObj.createConnection();
+                Updates update = new Updates();
+                update.run(conn);
+                /*System.out.println("Updates");
+                updates.menuLoop();*/
             }
         });
         menu.add(new MenuOption("5", "debug") {
