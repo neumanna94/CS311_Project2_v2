@@ -3,10 +3,7 @@ package core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class UpdateInfo {
@@ -102,6 +99,14 @@ public class UpdateInfo {
                 keyInput.next();
                 return;
             }
+            /*String pquery = "UPDATE Equipment SET BrandName = ?, Description = ?, HoursUsed ?, EquipmentMaintenanceScheduleID = ? WHERE EquipmentID = "  + id;
+            PreparedStatement p = conn.prepareStatement(pquery);
+            p.clearParameters();
+            p.setString(1, brandName);
+            p.setString(2, description);
+            p.setDouble(3, hourUsed);
+            p.setInt(4, schecule);
+            int rsetp = p.executeUpdate();*/
             String updateQuery = "UPDATE Equipment SET BrandName = '" + brandName + "', Description = '" + description +"', HoursUsed = " + hourUsed + ", EquipmentMaintenanceScheduleID = " + schecule + " WHERE EquipmentID = "  + id;
             int rsetu = selectStatement.executeUpdate(updateQuery);
 
@@ -222,6 +227,7 @@ public class UpdateInfo {
                 keyInput.next();
                 return;
             }
+
             String uquery = "UPDATE Customer SET FirstName = '" + firstName + " ', LastName = '" + lastName +"', Address = '" + address + "', Email = '" + email + "', PhoneNumber = '" + phone + "', Balance = " + balance + " WHERE CustomerID = " + id;
             int rsetu = selectStatement.executeUpdate(uquery);
             if(rsetu > 0)
