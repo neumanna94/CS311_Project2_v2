@@ -348,6 +348,11 @@ public class Main {
         menu.add(new MenuOption("4","Updates") {
             @Override
             public void doAction() {
+
+                ConnectionManager connObj = new ConnectionManager();
+                Connection conn = connObj.createConnection();
+                Updates update = new Updates();
+                update.run(conn);
                 updates.menuLoop();
             }
         });
