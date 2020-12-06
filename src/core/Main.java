@@ -23,53 +23,7 @@ public class Main {
         System.exit(0);
     }
 
-    private static User extractUserFromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
-        try {
-            user.setId(rs.getInt("userID"));
-            user.setName(rs.getString("Username"));
-            user.setPass(rs.getString("Password"));
-        }catch (SQLException ex){
-            System.out.println("User or pass incorrect");
-            ex.printStackTrace();
-            return null;
-        }
-        return user;
-
-    }
-
-    private static User getUserPass() throws IOException {
-        User user = new User();
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Username: \n");
-        user.setName( reader.readLine());
-        System.out.println("Password: \n");
-        user.setPass(reader.readLine());
-
-        return user;
-    }
-
-    public static User getUserByUserNameAndPassword(String user, String pass) throws SQLException {
-        ConnectionManager connector = new ConnectionManager();
-        Connection connection = connector.createConnection();
-        try{
-            PreparedStatement ps = connection.prepareStatement(Queries.USER_PASS.getString());
-            ps.setString(1, user);
-            ps.setString(2, pass);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next())
-            {
-                return extractUserFromResultSet(rs);
-            }
-        } catch (SQLException ex) {
-
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public ResultSet queryToResultSet(Queries query) throws SQLException {
+    public static ResultSet queryToResultSet(Queries query) throws SQLException {
         ConnectionManager connector = new ConnectionManager();
         Connection connection = connector.createConnection();
         String queryString = query.getString();
@@ -86,7 +40,6 @@ public class Main {
             connection.close();
             return null;
         }
-        connection.close();
         return rset;
     }
 
@@ -105,13 +58,19 @@ public class Main {
         Menu updates_insert = new Menu(2);
         Menu updates_delete = new Menu(2);
         Menu updates_update = new Menu(2);
+
+
         equipAndSupplies.add(new MenuOption("1", "Add new equipment") {
             @Override
-            public void doAction() {}
+            public void doAction() throws SQLException {
+
+            }
         });
         equipAndSupplies.add(new MenuOption("2", "Add new supply") {
             @Override
-            public void doAction() {}
+            public void doAction() {
+
+            }
         });
         equipAndSupplies.add(new MenuOption("3", "View Inventory") {
             @Override
@@ -119,30 +78,42 @@ public class Main {
         });
         equipAndSupplies.add(new MenuOption("0", "Quit") {
             @Override
-            public void doAction() { }
+            public void doAction() {
+
+            }
         });
         custAndServices.add(new MenuOption("1", "Analyze the progress of the business") {
             @Override
-            public void doAction() {cust_analyze.menuLoop();}
+            public void doAction() {
+                cust_analyze.menuLoop();
+            }
         });
         cust_analyze.add(new MenuOption("1", "Total number of new customers")
         {
             @Override
-            public void doAction(){};
+            public void doAction(){
+
+            };
         });
         cust_analyze.add(new MenuOption("2", "Total number of service transactions")
         {
             @Override
-            public void doAction(){};
+            public void doAction(){
+
+            };
         });
         custAndServices.add(new MenuOption("2", "Services") {
             @Override
-            public void doAction() {cust_services.menuLoop();}
+            public void doAction() {
+                cust_services.menuLoop();
+            }
         });
         cust_services.add(new MenuOption("1", "Requested Services")
         {
             @Override
-            public void doAction(){};
+            public void doAction(){
+
+            };
         });
         cust_services.add(new MenuOption("2", "Service Transactions")
         {
@@ -275,8 +246,10 @@ public class Main {
         debug.add(new MenuOption("2", "Test login") {
             @Override
             public void doAction() throws SQLException, IOException {
-                User x = getUserPass();
-                User user = getUserByUserNameAndPassword(x.getName(), x.getPass());
+                LoginManager loginManager = new LoginManager();
+
+                User x = loginManager.getUserPass();
+                User user = loginManager.getUserByUserNameAndPassword(x.getName(), x.getPass());
                 if(user == null)
                     System.out.println("user pass incorrect try again");
                 else
