@@ -3,8 +3,6 @@
  */
 package menu;
 
-import core.Main;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -63,7 +61,7 @@ public class Menu {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Choose an option. Press " + EXIT_TERM + " to exit.\n");
+        sb.append("\nChoose an option. Press " + EXIT_TERM + " to exit.\n");
 
         menuOptions.forEach(m -> {
             for(int i=0; i < level; i++){

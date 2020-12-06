@@ -1,9 +1,5 @@
-package core;
+package updates;
 
-import com.mysql.cj.protocol.Resultset;
-
-import javax.print.attribute.standard.JobOriginatingUserName;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,8 +7,8 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class Updates {
-    private String username = "wayne";
-    private String password = "password";
+    private String username;
+    private String password;
     Scanner keyInput = new Scanner(System.in);
 
     public void run(Connection conn)
@@ -66,12 +62,7 @@ public class Updates {
     }// END OF RUN
 
     public void printUpdatesOptions(){
-        System.out.println("\n*****************************************************************************");
-        System.out.println("                       **********************");
-//        System.out.println("                     Welcome to Clean-and-Go Shop");
         System.out.println("               Menu 4. UPDATES. Current User: " + username);
-        System.out.println("                       **********************");
-        System.out.println("*****************************************************************************");
         System.out.println("                     A. Insert New Information.");
         System.out.println("                     B. Delete Some Information.");
         System.out.println("                     C. Update Current Information.");
@@ -79,20 +70,17 @@ public class Updates {
     }
     public void printOptionMenu(String option)
     {
-        System.out.println("\n*****************************************************************************");
-        System.out.println("                       **********************");
-//        System.out.println("                     Welcome to Clean-and-Go Shop");
-        System.out.println("               Menu 4. UPDATES. Current User: " + username);
+        System.out.println("                    Menu 4. UPDATES.");
         System.out.println("                        Sub Option: " + option);
-        System.out.println("                       **********************");
-        System.out.println("*****************************************************************************");
         System.out.println("                     1. " + option + " Equipment");
         System.out.println("                     2. " + option + " Service");
         System.out.println("                     3. " + option + " Customer Information");
         System.out.println("                     4. " + option + " Employee Information");
         System.out.println("                           5. Quit");
     }
-
+    //****************************************
+    // Check user name and password;
+    //****************************************
     private boolean checkUserPassword (String username, String password, Connection conn) throws SQLException
     {
         String query = "SELECT * FROM User WHERE Username = '" + username + "' AND Password = '" + password + "';";

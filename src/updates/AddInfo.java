@@ -1,4 +1,4 @@
-package core;
+package updates;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,10 @@ public class AddInfo {
     Scanner keyInput = new Scanner(System.in);
     Updates menuObj = new Updates();
     //***********ALL ADD FUNCTIONS **********************
+
+    //****************************************
+    // Add Menu Options
+    //****************************************
     public void runAdd(Connection conn)
     {
         try {
@@ -49,6 +53,9 @@ public class AddInfo {
         }catch (SQLException ex) {
             System.out.println(ex); }
     }
+    //****************************************
+    // Add NEW Equipment Information
+    //****************************************
     private void addEquiptment(Connection conn) throws SQLException
     {
         //Get BrandName, Description, PurchasePrice(double), Type,
@@ -71,13 +78,6 @@ public class AddInfo {
         System.out.print("New Equiptment Type: ");
         type = readLine();
 
-        /*brandName = "Good Year"; description = "I am very lazy to think of a good Description";
-        type = "dryer"; price = 998.99;
-        System.out.print("New Equiptment Brand Name: " + brandName);
-        System.out.print("New Equiptment Description: " + description);
-        System.out.print("New Equiptment Purchase Price: " + price);
-        System.out.print("New Equiptment Type: " + type);*/
-
         String query = "SELECT MAX(InventoryID) FROM Inventory";
         Statement selectStatement = conn.createStatement();
         ResultSet rset = selectStatement.executeQuery(query);
@@ -85,7 +85,7 @@ public class AddInfo {
         {
             maxID = rset.getInt(1); maxID++;
             System.out.println("MaxID: " + maxID);
-            String query1 = "INSERT INTO Inventory(InventoryID, InventoryCategory) VALUES ("+ maxID + ", 'X')";
+            String query1 = "INSERT INTO Inventory(InventoryID, InventoryCategory) VALUES ("+ maxID + ", 'E')";
             int result = selectStatement.executeUpdate(query1);
 
             String query2 = "INSERT INTO Equipment (EquipmentID, InventoryID, BrandName, Description, PurchaseDate, PurchasePrice, Type, HoursUsed, EquipmentMaintenanceScheduleID) SELECT MAX(EquipmentID) + 1, "+ maxID +", '"+ brandName + "', '" + description + "', CURDATE(), " + price + ", '" + type + "', 0, 2 FROM Equipment";
@@ -93,6 +93,9 @@ public class AddInfo {
             System.out.println("Result: " + resu);
         }
     }
+    //****************************************
+    // Add NEW Service Information
+    //****************************************
     private void addService(Connection conn) throws SQLException
     {
 
@@ -114,10 +117,6 @@ public class AddInfo {
         }
         System.out.print("New Service Duration: ");
         duration = readLine();
-        /*System.out.print("New Service Name: " + serviceName);
-        System.out.print("New Service Description: " + description);
-        System.out.print("New Service Rate Charge: " + rateCharge);
-        System.out.print("New Service Duration: " + duration);*/
 
         String query = "INSERT INTO Service SELECT MAX(ServiceID) + 1, '" + serviceName + "', '" + description + "', " + rateCharge +", '" + duration + "' FROM Service";
         Statement selectStatement = conn.createStatement();
@@ -131,6 +130,9 @@ public class AddInfo {
             System.out.println("Fail to Add New Service!");
         }
     }
+    //****************************************
+    // Add NEW Customer Information
+    //****************************************
     private void addCustomerInfo(Connection conn) throws SQLException
     {
         //Get FirstName, LastName, Address, Email, Phone, Balance
@@ -167,6 +169,9 @@ public class AddInfo {
             System.out.println("Fail to Add New Customer!");
         }
     }
+    //****************************************
+    // Add NEW Employee Information
+    //****************************************
     private void addEmployeeInfo(Connection conn) throws SQLException
     {
         //Get FirstName, LastName, Address, Gender, Position
@@ -202,6 +207,9 @@ public class AddInfo {
         }
     }
 
+    //****************************************
+    // Read Line and Return String
+    //****************************************
     private static String readLine() {
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr, 1);

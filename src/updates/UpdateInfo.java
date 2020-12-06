@@ -1,4 +1,4 @@
-package core;
+package updates;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,10 @@ public class UpdateInfo {
 
 
     //*********** ALL UPDATE FUNCTIONS ******************************
+
+    //****************************************
+    // Update Menu Options
+    //****************************************
     public void runUpdate(Connection conn)
     {
         try {
@@ -40,6 +44,7 @@ public class UpdateInfo {
                     case '5':
                         done = true;
                         System.out.println("Returning to Previous Menu....");
+                        conn.close();
                         break;
                     default:
                         System.out.println("NOT VALID OPTION!!!");
@@ -49,6 +54,10 @@ public class UpdateInfo {
         }catch (SQLException ex) {
             System.out.println(ex); }
     }
+
+    //****************************************
+    // Update Equipment Information
+    //****************************************
     private void updateEquiptment(Connection conn) throws SQLException
     {
         //Get Equipment ID
@@ -99,14 +108,6 @@ public class UpdateInfo {
                 keyInput.next();
                 return;
             }
-            /*String pquery = "UPDATE Equipment SET BrandName = ?, Description = ?, HoursUsed ?, EquipmentMaintenanceScheduleID = ? WHERE EquipmentID = "  + id;
-            PreparedStatement p = conn.prepareStatement(pquery);
-            p.clearParameters();
-            p.setString(1, brandName);
-            p.setString(2, description);
-            p.setDouble(3, hourUsed);
-            p.setInt(4, schecule);
-            int rsetp = p.executeUpdate();*/
             String updateQuery = "UPDATE Equipment SET BrandName = '" + brandName + "', Description = '" + description +"', HoursUsed = " + hourUsed + ", EquipmentMaintenanceScheduleID = " + schecule + " WHERE EquipmentID = "  + id;
             int rsetu = selectStatement.executeUpdate(updateQuery);
 
@@ -121,6 +122,9 @@ public class UpdateInfo {
             System.out.println("Equipment ID " + id + " Not Found!");
         }
     }
+    //****************************************
+    // Update Service Function
+    //****************************************
     private void updateService(Connection conn) throws SQLException
     {
         int id;
@@ -167,19 +171,18 @@ public class UpdateInfo {
 
             int rsetu = selectStatement.executeUpdate(uquery);
             if(rsetu > 0)
-            {
                 System.out.println("Service ID: " + id  + " UPDATED! :D.");
-            }
             else
-            {
                 System.out.println("Fail to UPDATE New Service!");
-            }
         }
         else
         {
             System.out.println("Service ID " + id + " Not Found!");
         }
     }
+    //****************************************
+    // Update Customer Information
+    //****************************************
     private void updateCustomerInfo(Connection conn) throws SQLException
     {
         //Get Equipment ID
@@ -241,6 +244,9 @@ public class UpdateInfo {
             System.out.println("Customer ID " + id + " Not Found!");
         }
     }
+    //****************************************
+    // Update Employee Information function
+    //****************************************
     private void updateEmployeeInfo(Connection conn) throws SQLException
     {
         //Get Employee ID
@@ -301,8 +307,9 @@ public class UpdateInfo {
     }
 
 
-
-
+    //****************************************
+    // ReadLine to Read the String
+    //****************************************
     private static String readLine() {
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr, 1);

@@ -16,7 +16,7 @@ public enum Queries {
     SELECT_SERVICE_TRANSACTION_COUNT_MONTH("SELECT COUNT(*) FROM CustomerTransaction as CT WHERE MONTH(CT.Date) = MONTH(CURRENT_DATE);"),
     SELECT_AVG_CUSTOMER_SATISFACTION("SELECT S.ServiceID, S.ServiceName, AVG(CT.Satisfaction) FROM CustomerTransaction as CT INNER JOIN Service as S ON S.ServiceID = CT.ServiceID GROUP BY CT.ServiceID;"),
     SELECT_TOTAL_NUMBER_OF_EQUIPMENT_BY_TYPE("SELECT e.Type, COUNT(*) FROM Equipment as e GROUP BY e.Type;"),
-    SELECT_EMPLOYEE_SCHEDULES("SELECT E.FirstName, E.LastName, S.StartTime, S.Duration, S.Day FROM Employee as E INNER JOIN EmployeeShift as ES ON E.EmployeeID = ES.EmployeeID INNER JOIN Schedule as S ON S.ScheduleID = ES.ScheduleID;"),
+    SELECT_EMPLOYEE_SCHEDULES("SELECT CONCAT(E.FirstName,' ', E.LastName), DATE(S.StartTime), TIME(S.StartTime), S.Duration FROM Employee as E INNER JOIN EmployeeShift as ES ON E.EmployeeID = ES.EmployeeID INNER JOIN Schedule as S ON S.ScheduleID = ES.ScheduleID;"),
     SELECT_MACHINE_SCHEDULES("SELECT E.EquipmentID, E.Description, E.PurchaseDate, E.Type, EMS.Name, EMS.NextMaintenanceDate, EMS.MaintenancePeriod, EMS.LastMaintenance, EMS.Cost FROM Equipment AS E INNER JOIN EquipmentMaintenanceSchedule AS EMS ON E.EquipmentMaintenanceScheduleID = EMS.EquipmentMaintenanceScheduleID;"),
     SELECT_MACHINE_TIME_IN_MONTHS("SELECT EquipmentID, Description, Type, HoursUsed*0.001368925 as \'Months in use\' FROM Equipment;"),
     SELECT_MACHINE_PERCENT_TIME_USED("SELECT HoursUsed/(DATEDIFF(CURRENT_DATE, PurchaseDate)*24) as 'Percentage time used' FROM Equipment;"),
@@ -36,4 +36,5 @@ public enum Queries {
     public String getString() {
         return this.query;
     }
+
 }

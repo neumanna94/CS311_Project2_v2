@@ -13,10 +13,11 @@ public class PrintManager {
             for (int i = 1; i <= columnsNumber; i++) {
                 if (i > 1) System.out.print(",  ");
                 String columnValue = rset.getString(i);
-                System.out.print(columnValue /*+ " " + rsmd.getColumnName(i)*/);
+                System.out.print(columnValue);
             }
             System.out.println("");
         }
+        System.out.println("");
     }
     public static void printColumns(ResultSet rset) throws SQLException {
         ResultSet result = rset;

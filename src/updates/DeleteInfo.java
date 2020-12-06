@@ -1,4 +1,4 @@
-package core;
+package updates;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,6 +49,9 @@ public class DeleteInfo {
         }catch (SQLException ex) {
             System.out.println(ex); }
     }
+    //****************************************
+    // DELETE Equipment Using EquipmentID
+    //****************************************
     private void deleteEquiptment(Connection conn) throws SQLException
     {
         //Get Equipment ID
@@ -78,6 +81,9 @@ public class DeleteInfo {
             System.out.println("Equipment ID " + id + " Not Found!");
         }
     }
+    //****************************************
+    // DELETE Service Using ServiceID
+    //****************************************
     private void deleteService(Connection conn) throws SQLException
     {
         //Get Equipment ID
@@ -107,6 +113,9 @@ public class DeleteInfo {
             System.out.println("Service ID " + id + " Not Found!");
         }
     }
+    //****************************************
+    // DELETE Customer using CustomerID
+    //****************************************
     private void deleteCustomerInfo(Connection conn) throws SQLException
     {
         //Get Equipment ID
@@ -136,7 +145,9 @@ public class DeleteInfo {
             System.out.println("Customer ID " + id + " Not Found!");
         }
     }
-
+    //****************************************
+    // DELETE Employee Using Employee ID
+    //****************************************
     private void deleteEmployeeInfo(Connection conn) throws SQLException
     {
         //Get Employee ID
@@ -166,7 +177,9 @@ public class DeleteInfo {
             System.out.println("Employee ID " + id + " Not Found!");
         }
     }
-
+    //****************************************
+    // ReadLine to Read the String
+    //****************************************
     private static String readLine() {
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr, 1);

@@ -5,13 +5,13 @@
 package core;
 
 import menu.*;
+import updates.Updates;
 import utils.*;
 import data.User;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
 
@@ -106,12 +106,14 @@ public class Main {
         custAndServices.add(new MenuOption("1", "Analyze the progress of the business") {
             @Override
             public void doAction() {
+
                 cust_analyze.menuLoop();
             }
         });
         cust_analyze.add(new MenuOption("1", "Total number of new customers")
         {
             public void doAction() throws SQLException {
+                System.out.println("Total number of new customers this year: ");
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_YEARLY);
                 PrintManager printManager = new PrintManager();
                 printManager.printColumns(resultSet);
@@ -120,6 +122,7 @@ public class Main {
         cust_analyze.add(new MenuOption("2", "Total number of service transactions")
         {
             public void doAction() throws SQLException {
+                System.out.println("Total number of service transactions this month: ");
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_SERVICE_TRANSACTION_COUNT_MONTH);
                 PrintManager printManager = new PrintManager();
                 printManager.printNColumns(resultSet);
@@ -135,6 +138,7 @@ public class Main {
         cust_services.add(new MenuOption("1", "Most requested service")
         {
             public void doAction() throws SQLException {
+                System.out.println("The most used service this month was: ");
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_MOST_USED_SERVICE);
                 PrintManager printManager = new PrintManager();
                 printManager.printNColumns(resultSet);
@@ -144,6 +148,7 @@ public class Main {
         {
             @Override
             public void doAction() throws SQLException {
+                System.out.println("Total number of service transactions this month: ");
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_SERVICE_TRANSACTION_COUNT_MONTH);
                 PrintManager printManager = new PrintManager();
                 printManager.printNColumns(resultSet);
@@ -154,6 +159,7 @@ public class Main {
         {
             @Override
             public void doAction() throws SQLException {
+                System.out.println("Annual revenue: ");
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_ANNUAL_REVENUE_SERVICE_TO_CUSTOMERS);
                 PrintManager printManager = new PrintManager();
                 printManager.printNColumns(resultSet);
@@ -168,6 +174,7 @@ public class Main {
         {
             @Override
             public void doAction() throws SQLException {
+
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
                 PrintManager printManager = new PrintManager();
                 printManager.printNColumns(resultSet);
@@ -177,6 +184,11 @@ public class Main {
         {
             @Override
             public void doAction() throws SQLException {
+                System.out.println("Enter a name of a service: ");
+
+                Scanner sc = new Scanner(System.in);
+                String in = sc.next();
+
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_NEW_CUSTOMERS_MONTH_DISTRIBUTION);
                 PrintManager printManager = new PrintManager();
                 printManager.printNColumns(resultSet);
@@ -193,6 +205,7 @@ public class Main {
         employees.add(new MenuOption("1", "Display Schedules"){
             @Override
             public void doAction() throws SQLException {
+                System.out.println("Name,\t\tDate,\t\tStart Time,\t  Duration");
                 ResultSet resultSet = queryToResultSet(Queries.SELECT_EMPLOYEE_SCHEDULES);
                 PrintManager printManager = new PrintManager();
                 printManager.printNColumns(resultSet);
@@ -203,74 +216,7 @@ public class Main {
             @Override
             public void doAction(){};
         });
-        //Calls the delete equipment menu
-        updates.add(new MenuOption("1", "Insert new information")
-        {
-            @Override
-            public void doAction(){updates_insert.menuLoop();};
-        });
-        updates_insert.add(new MenuOption("1","Add a new equipment")
-        {
-            @Override
-            public void doAction(){};
-        });
-        updates_insert.add(new MenuOption("2","Add a new service")
-        {
-            @Override
-            public void doAction(){};
-        });
-        updates_insert.add(new MenuOption("3","Add new customer information")
-        {
-            @Override
-            public void doAction(){};
-        });
-        updates_insert.add(new MenuOption("4","Add new employee information")
-        {
-            @Override
-            public void doAction(){};
-        });
-        //Calls the delete information menu
-        updates.add(new MenuOption("2", "Delete information")
-        {
-            @Override
-            public void doAction(){updates_delete.menuLoop();};
-        });
-        updates_delete.add(new MenuOption("1", "Delete specific equipment"){
-            @Override
-            public void doAction(){};
-        });
-        updates_delete.add(new MenuOption("2", "Delete specific service"){
-            @Override
-            public void doAction(){};
-        });
-        updates_delete.add(new MenuOption("3", "Delete specific customer information"){
-            @Override
-            public void doAction(){};
-        });
-        updates_delete.add(new MenuOption("3", "Delete specific employee information"){
-            @Override
-            public void doAction(){};
-        });
-        updates_update.add(new MenuOption("1", "Update specific equipment")
-        {
-            @Override
-            public void doAction(){};
-        });
-        updates_update.add(new MenuOption("2", "Update specific service")
-        {
-            @Override
-            public void doAction(){};
-        });
-        updates_update.add(new MenuOption("3", "Update specific customer information")
-        {
-            @Override
-            public void doAction(){};
-        });
-        updates_update.add(new MenuOption("4", "Update specific employee information")
-        {
-            @Override
-            public void doAction(){};
-        });
+
         //Calls the add information menu
         updates.add(new MenuOption("3", "Update current information")
         {
@@ -331,13 +277,7 @@ public class Main {
                 Connection conn = connObj.createConnection();
                 Updates update = new Updates();
                 update.run(conn);
-                updates.menuLoop();
-            }
-        });
-        menu.add(new MenuOption("5", "debug") {
-            @Override
-            public void doAction() {
-                debug.menuLoop();
+                //updates.menuLoop();
             }
         });
 
